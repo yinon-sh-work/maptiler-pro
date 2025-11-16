@@ -1,0 +1,96 @@
+
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Map PRO 3D+AR+Share – ESM</title>
+  <!-- MapLibre & UI -->
+  <link href="https://unpkg.com/maplibre-gl@4.6.0/dist/maplibre-gl.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/maplibre-gl-draw@1.6.9/dist/mapbox-gl-draw.css" rel="stylesheet" />
+  <link href="https://unpkg.com/@maptiler/geocoding-control@latest/style.css" rel="stylesheet" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Import Map: lets example modules import 'three' as a bare specifier -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Map PRO 3D+AR+Share (ESM)</h1>
+    <div class="controls">
+      <label>API Key: <input id="apiKey" type="password" placeholder="YOUR_MAPTILER_API_KEY" /></label>
+      <button id="loadMap">טען מפה</button>
+      <label class="toggle"><input id="toggleLabels" type="checkbox" checked />תוויות</label>
+      <label>שפה:<select id="language"><option value="en" selected>English</option><option value="he">עברית</option><option value="ar">العربية</option></select></label>
+      <button id="btn3d">מצב 3D</button>
+      <div class="sep"></div>
+      <button id="btnMeasure">מדידה 📏</button>
+      <button id="btnDrawPoint">נק׳</button>
+      <button id="btnDrawLine">קו</button>
+      <button id="btnDrawPoly">פוליגון</button>
+      <button id="btnDelete">מחק</button>
+      <button id="btnExport">ייצוא GeoJSON</button>
+      <div class="sep"></div>
+      <button id="btnRouting">ניווט 🧭</button>
+      <select id="routeProfile"><option value="driving" selected>רכב</option><option value="foot">רגלי</option><option value="bike">אופניים</option></select>
+      <div class="sep"></div>
+      <button id="btnAddLayer">שכבה…</button>
+      <label class="toggle"><input id="toggleCluster" type="checkbox" />קלסטרים</label>
+      <div class="sep"></div>
+      <label class="toggle"><input id="toggleOffline" type="checkbox" />Offline</label>
+      <div class="sep"></div>
+      <button id="btnSelectArea3D">בחר אזור 3D</button>
+      <button id="btnBuild3D">בנה מודל 3D</button>
+      <button id="btnExportGLB" disabled>ייצוא GLB</button>
+      <button id="btnOpenAR" disabled>פתח ב‑AR</button>
+      <button id="btnShare" disabled>שיתוף/שמירה בענן</button>
+    </div>
+  </header>
+
+  <div id="map"></div>
+  <div id="panels">
+    <div id="searchPanel"></div>
+    <div id="status"></div>
+    <div id="builderPanel" class="panel hidden">
+      <h3>בניית מודל 3D</h3>
+      <div class="grid">
+        <label>זום DEM: <input id="demZoom" type="number" min="7" max="14" value="12"></label>
+        <label>רזולוציית רשת: <select id="gridRes"><option value="256">256×256</option><option value="384">384×384</option><option value="512" selected>512×512</option></select></label>
+        <label>Exaggeration: <input id="exaggeration" type="number" step="0.1" value="1.0"></label>
+        <label>טקסטורה: <select id="textureMode"><option value="tiles" selected>לוויין (אריחים מדויקים)</option><option value="static">Static Map (מהיר)</option><option value="none">ללא</option></select></label>
+        <label>LOD: <select id="lodMode"><option value="auto" selected>אוטומטי (3 רמות)</option><option value="off">כבוי</option></select></label>
+        <label>פקטור דילול (Simplify): <input id="simplifyFactor" type="number" min="0" max="0.9" step="0.1" value="0.5"></label>
+      </div>
+      <div id="buildStatus"></div>
+    </div>
+
+    <div id="sharePanel" class="panel hidden">
+      <h3>שיתוף AR</h3>
+      <div id="shareStatus">העלה את ה‑GLB ל‑Vercel Blob וקבל קישור.</div>
+      <button id="btnUploadBlob" disabled>העלה ל‑Blob</button>
+      <div id="shareResult" class="hidden">
+        <p>קישור AR: <a id="shareUrl" target="_blank" rel="noopener"></a></p>
+        <canvas id="qrCanvas" width="256" height="256"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3rd‑party libs (non‑module or UMD safe) -->
+  <script src="https://unpkg.com/maplibre-gl@4.6.0/dist/maplibre-gl.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/maplibre-gl-draw@1.6.9/dist/mapbox-gl-draw.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@7.2.0/turf.min.js"></script>
+  <script src="https://unpkg.com/@maptiler/geocoding-control@latest/maplibregl.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+
+  <!-- Our app is a module that imports three/JS modules itself -->
+  <script type="module" src="vendor-togeojson.js"></script>
+  <script type="module" src="main.js"></script>
+</body>
+</html>
